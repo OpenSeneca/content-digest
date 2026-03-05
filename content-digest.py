@@ -131,9 +131,9 @@ def extract_content(directory: Path) -> Dict[str, Dict[str, List[str]]]:
         try:
             content = md_file.read_text()
 
-            # Extract tweet drafts
-            tweet_pattern = r'(?:Tweet Draft:|## Tweet Draft)[:]\s*\n?([^#\n]+)'
-            tweets = re.findall(tweet_pattern, content, re.IGNORECASE)
+            # Extract tweet drafts (matches lines starting with "Tweet Draft:" or "Tweet Drafts:")
+            tweet_pattern = r'^Tweet Drafts?:\s*(.+)$'
+            tweets = re.findall(tweet_pattern, content, re.IGNORECASE | re.MULTILINE)
             for tweet in tweets:
                 tweet_text = tweet.strip()
                 if tweet_text and len(tweet_text) > 0:
@@ -147,8 +147,8 @@ def extract_content(directory: Path) -> Dict[str, Dict[str, List[str]]]:
                     })
 
             # Extract blog angles
-            blog_pattern = r'(?:Blog Angle:|BLOG ANGLE:)[:]\s*\n?([^#\n]+)'
-            angles = re.findall(blog_pattern, content, re.IGNORECASE)
+            blog_pattern = r'^Blog Angle:\s*(.+)$'
+            angles = re.findall(blog_pattern, content, re.IGNORECASE | re.MULTILINE)
             for angle in angles:
                 angle_text = angle.strip()
                 if angle_text and len(angle_text) > 0:
@@ -162,8 +162,8 @@ def extract_content(directory: Path) -> Dict[str, Dict[str, List[str]]]:
                     })
 
             # Extract signup links
-            signup_pattern = r'(?:SIGNUP:|SIGNUP[:])[:]\s*\n?([^#\n\s]+)'
-            signups = re.findall(signup_pattern, content, re.IGNORECASE)
+            signup_pattern = r'^SIGNUP:\s*(.+)$'
+            signups = re.findall(signup_pattern, content, re.IGNORECASE | re.MULTILINE)
             for signup in signups:
                 signup_text = signup.strip()
                 if signup_text and len(signup_text) > 0:
